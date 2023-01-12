@@ -24,3 +24,7 @@ IDEAS:
 - [ ] NGO
 
 - [ ] Admin
+
+- Plausible ideas
+
+- [ ] Integrate ChatGPT
