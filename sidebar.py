@@ -1,5 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
+from home_page import Home
+from calculator import Calculator
+from event_page import Event
 
 class Sidebar:
     def __init__(self, window: tk.Tk, username: str, expand: bool = False):
@@ -27,11 +30,11 @@ class Sidebar:
         self.sidebar.grid(row = 1, column = 0, sticky = "w")
         self.sidebar.grid_propagate(False)
 
-        self.home_btn = ttk.Button(self.sidebar, text = "Home", style = "Accent.TButton")
-        self.green_btn = ttk.Button(self.sidebar, text = "How green?", style = "Accent.TButton")
-        self.posts_btn = ttk.Button(self.sidebar, text = "Forum", style = "Accent.TButton")
-        self.events_btn = ttk.Button(self.sidebar, text = "Events", style = "Accent.TButton")
-        self.logout_btn = ttk.Button(self.sidebar, text = "Log out", style = "Accent.TButton")
+        self.home_btn = ttk.Button(self.sidebar, text = "Home", style = "Accent.TButton", command = lambda m = 0: self.open_tab(m))
+        self.green_btn = ttk.Button(self.sidebar, text = "How green?", style = "Accent.TButton", command = lambda m = 1: self.open_tab(m))
+        self.posts_btn = ttk.Button(self.sidebar, text = "Forum", style = "Accent.TButton", command = lambda m = 2: self.open_tab(m))
+        self.events_btn = ttk.Button(self.sidebar, text = "Events", style = "Accent.TButton", command = lambda m = 3: self.open_tab(m))
+        self.logout_btn = ttk.Button(self.sidebar, text = "Log out", style = "Accent.TButton", command = lambda m = 4: self.open_tab(m))
         self.home_btn.grid(row = 0, column = 0, padx = 10, pady = 10)
         self.green_btn.grid(row = 1, column = 0, padx = 10)
         self.posts_btn.grid(row = 2, column = 0, padx = 10, pady = 10)
@@ -57,3 +60,12 @@ class Sidebar:
                 self.window.after_cancel(rep)
                 self.expanded = False
                 self.side_btn.config(text = "≡")
+
+    def open_tab(self, index):
+        self.window.destroy()
+        if index == 0:
+            Home(self.username)
+        elif index == 1:
+            Calculator(self.username)
+        elif index == 3:
+            Event(self.username)
