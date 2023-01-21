@@ -45,10 +45,13 @@ class Recommendation:
         openai.api_key = API_KEY
         file1 = open("./oakridge-codefest/text1.txt","r").read()
         file2 = open("./oakridge-codefest/text2.txt","r").read()
-        dataset = [file1, file2]
+        file3 = open("./oakridge-codefest/text3.txt","r").read()
+        file4 = open("./oakridge-codefest/text4.txt","r").read()
+        file5 = open("./oakridge-codefest/text5.txt","r").read()
+        dataset = [file1, file2, file3, file4, file5]
 
         model = "davinci"
-        prompt = "Fine-tune the model to give similar results when asked for only 1 reccomendation on possible events to be conducted to be more environmentally conscious: " + " | " .join(dataset)   
+        prompt = "Fine-tune the model to give shorter but similar results and give only 1 reccomendation on possible events to be conducted to be more environmentally conscious: " + " | " .join(dataset)   
 
 
         response = openai.Completion.create(
@@ -63,4 +66,5 @@ class Recommendation:
 
         recc = response["choices"][0]["text"]
         recc = textwrap.fill(recc, width = 50)
+        recc = recc.replace("|", "\n")
         return recc
