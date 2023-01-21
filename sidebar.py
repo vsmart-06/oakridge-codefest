@@ -29,7 +29,7 @@ class Sidebar:
 
         self.home_btn = ttk.Button(self.sidebar, text = "Home", style = "Accent.TButton", command = lambda m = 0: self.open_tab(m))
         self.green_btn = ttk.Button(self.sidebar, text = "How Green?", style = "Accent.TButton", command = lambda m = 1: self.open_tab(m))
-        self.posts_btn = ttk.Button(self.sidebar, text = "Recommendations", style = "Accent.TButton", command = lambda m = 2: self.open_tab(m))
+        self.posts_btn = ttk.Button(self.sidebar, text = "Recommend", style = "Accent.TButton", command = lambda m = 2: self.open_tab(m))
         self.events_btn = ttk.Button(self.sidebar, text = "Events", style = "Accent.TButton", command = lambda m = 3: self.open_tab(m))
         self.logout_btn = ttk.Button(self.sidebar, text = "Log out", style = "Accent.TButton", command = lambda m = 4: self.open_tab(m))
         self.home_btn.grid(row = 0, column = 0, padx = 10, pady = 10)

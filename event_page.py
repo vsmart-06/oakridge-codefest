@@ -10,7 +10,7 @@ from records import new_event, get_event, join_event
 
 dotenv.load_dotenv()
 
-API_KEY = os.getenv("API_KEY")
+API_KEY = os.getenv("GOOGLE_API_KEY")
 
 class Event:
     def __init__(self, username: str, old_window: tk.Tk = None):
