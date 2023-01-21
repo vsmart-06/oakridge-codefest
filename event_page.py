@@ -100,7 +100,7 @@ class EventView:
 
         author_name_lbl = ttk.Label(self.main_frame, text = "Author:")
         author_name_lbl.grid(row = 5, column = 0, pady = (0, 10), padx = 10)
-        author_lbl = ttk.Label(self.main_frame, text = self.username)
+        author_lbl = ttk.Label(self.main_frame, text = event_data[1])
         author_lbl.grid(row = 5, column = 1)
 
         attendees_name_lbl = ttk.Label(self.main_frame, text = "Attendees:")
@@ -113,9 +113,9 @@ class EventView:
         attendees_lbl.grid(row = 6, column = 1)
 
         back_btn = ttk.Button(self.main_frame, text = "Back", command = lambda m = self.username: Event(m, self.window))
-        back_btn.grid(row = 7, column = 0)
+        back_btn.grid(row = 7, column = 0, pady = (0, 10))
         join_btn = ttk.Button(self.main_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = id: self.join_btn(m))
-        join_btn.grid(row = 7, column = 1)
+        join_btn.grid(row = 7, column = 1, pady = (0, 10))
 
         self.window.update()
         self.sidebar = Sidebar(self.window)
@@ -208,12 +208,12 @@ class EventCreate:
         if len(place_names) > 5:
             place_names = place_names[:5]
         
-        places_frame = ttk.Frame(self.location_frame)
-        places_frame.grid(row = 1, column = 0, sticky = "ew")
+        self.places_frame = ttk.Frame(self.location_frame)
+        self.places_frame.grid(row = 1, column = 0, sticky = "ew")
         
         self.place_btns = []
         for x in range(len(place_names)):
-            self.place_btns.append(ttk.Button(places_frame, text = place_names[x], command = lambda m = x: self.choose_place(m)))
+            self.place_btns.append(ttk.Button(self.places_frame, text = place_names[x], command = lambda m = x: self.choose_place(m)))
             self.place_btns[-1].grid(row = x, column = 0, pady = (0, 5), sticky = "ew")
 
         self.window.update()
@@ -223,6 +223,9 @@ class EventCreate:
         place = self.place_btns[index]["text"]
         self.location_entry.delete(0, "end")
         self.location_entry.insert(0, place)
+        self.places_frame.destroy()
+        self.window.update()
+        self.sidebar = Sidebar(self.window)
 
     def check_time(self, hour):
         try:
@@ -309,11 +312,10 @@ class EventCreate:
 
         self.window.destroy()
         sub_window = tk.Tk()
+        sub_window.title("Events")
         sub_window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
         confirmation = ttk.Label(sub_window, text = "You have successfully created the event!", borderwidth = 1)
         confirmation.pack(padx = 10, pady = 10)
         sub_window.mainloop()
-        Event(self.username, sub_window)
-
-Event("vishnu")
+        Event(self.username)

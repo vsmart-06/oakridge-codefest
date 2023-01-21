@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from login_page import Login
-from event_page import EventCreate
+from event_page import Event
 
 login_page = Login()
-event_page = EventCreate(login_page.username)
+event_page = Event(login_page.username)
