@@ -77,7 +77,7 @@ def get_event(id = None):
 def join_event(id, username):
     conn = db.connect("oakridge-codefest/oakridge-codefest.db")
     c = conn.cursor()
-    c.execute(f"SELECT attendess FROM events WHERE id = {id}")
+    c.execute(f"SELECT attendees FROM events WHERE id = {id}")
     attendees = c.fetchone()
     if attendees:
         attendees += f",{username}"
