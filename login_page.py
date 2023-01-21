@@ -40,6 +40,8 @@ class Login:
             msg = "Logged in successfully!"
             colour = "green"
         self.error_lbl.config(text = msg, foreground = colour)
+        if result:
+            self.window.destroy()
 
     def signup(self):
         username = self.username_ent.get()

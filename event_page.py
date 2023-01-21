@@ -33,6 +33,14 @@ class Events:
         self.cal.set_date(datetime.date.today())
         self.cal.grid(row = 2, column = 1, padx = 10, pady = (0, 10), sticky = "w")
 
+        self.location_label = ttk.Label(self.main_frame, text = "Location:")
+        self.location_label.grid(row = 3, column = 0, padx = 10, pady = (0, 10))
+        self.location_entry = ttk.Entry(self.main_frame, width = 50)
+        self.location_entry.grid(row = 3, column = 1, padx = 10, pady = (0, 10))
+
+        self.window.update()
         self.sidebar = Sidebar(self.window)
 
         self.window.mainloop()
+
+Events()
