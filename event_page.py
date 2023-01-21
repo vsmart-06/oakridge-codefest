@@ -28,10 +28,13 @@ class Events:
 
         self.description_label = ttk.Label(self.main_frame, text = "Description:")
         self.description_label.grid(row = 1, column = 0, padx = 10, pady = (0, 10), sticky = "n")
-        self.description_frame = ttk.Frame(self.main_frame, style = "Card", borderwidth = 1)
-        self.description_frame.grid(row = 1, column = 1, padx = 10, pady = (0, 10), sticky = "ew")
+        self.description_mega_frame = ttk.Frame(self.main_frame)
+        self.description_mega_frame.grid(row = 1, column = 1, pady = (0, 10), sticky = "ew")
+        self.description_frame = ttk.Frame(self.description_mega_frame, style = "Card", borderwidth = 1)
+        self.description_frame.grid(row = 0, column = 0, padx = 10, pady = (0, 10), sticky = "ew")
         self.description_entry = tk.Text(self.description_frame, width = 50, height = 10, borderwidth = 0)
         self.description_entry.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = "ew")
+        self.description_entry.bind("<FocusOut>", self.check_description)
 
 
         self.cal_label = ttk.Label(self.main_frame, text = "Choose the date for the event:")
@@ -113,10 +116,23 @@ class Events:
         else:
             if not (0 <= int(self.time_minutes.get()) <= 59):
                 self.time_hour.set("00")
+    
+    def check_description(self, m):
+        description = self.description_entry.get("1.0", "end-1c").strip()
+        if len(description.split()) > 300:
+            description = description.split()[:300]
+            self.error_lbl = ttk.Label(self.description_mega_frame, text = "Make your description within 300 words", foreground = "red")
+            self.error_lbl.grid(row = 1, column = 0)
+        else:
+            try:
+                self.error_lbl.grid_forget()
+            except:
+                pass
+
 
     def create_event(self):
         title = self.title_entry.get()
-        description = self.description_entry.get()
+        description = self.description_entry.get("1.0", "end-1c")
         date = self.cal.get_date()
         time = self.time_hour.get()+":"+self.time_minutes.get()
         location = self.location_entry.get()
