@@ -10,7 +10,7 @@ class Calculator:
         self.username = username
         self.root = tk.Tk()
         self.root.title("How Green?")
-        self.root.geometry("350x400")
+        self.root.geometry("550x400")
         self.root.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
 
@@ -44,8 +44,7 @@ the electricity being consumed.''')
         self.root.destroy()
         self.value -= 1
         if self.value == 0:
-            obj = IP()
-            obj.username = self.username
+            obj = IP(self.username)
             obj.create_graph()
             Calculator(self.username)
 

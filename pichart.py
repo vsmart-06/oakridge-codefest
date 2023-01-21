@@ -7,7 +7,10 @@ import numpy as np
 from sidebar import Sidebar
 from PIL import Image,ImageTk
 class IP:
-    
+    def __init__(self, username: str):
+        self.username = username
+
+
     def percentdata(self):
 
         # Python Program to Get IP Address
@@ -71,13 +74,13 @@ class IP:
         root = tk.Tk()
         root.title("How Green Are You?")
         root.geometry("850x650")
-        root.tk.call("source", "./forest-dark.tcl")
+        root.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
 
         frame=ttk.Frame(root)
         frame.grid(row=0, column=1, padx=10)
 
-        myLabel = ttk.Label(frame, text='Pie Chart').grid(row=0, column=1)
+        ttk.Label(frame, text='Pie Chart').grid(row=0, column=1)
 
         # create pie chart and save as image How Green?
         array = self.percentdata()
@@ -96,23 +99,8 @@ class IP:
         label = ttk.Label(frame, image = img)
         label.grid(row=1, column=1)
 
-        self.value = 1
-        def changeValue():
-            self.value -= 1
-            if self.value == 0:
-                root.destroy()
-
-                self.value = 1
-            else:
-                pass
-        
-        label = ttk.Label(frame, text="").grid(row=2,column=1)
-        button = ttk.Button(frame, text="GO BACK", command=changeValue, style="Accent.TButton")
-        ttk.Style().configure('TButton')
-        button.grid(row=3, column=1, ipadx=10, ipady=5)
-
         root.update()
-        self.sidebar = Sidebar(root)
+        self.sidebar = Sidebar(root, self.username, True)
         
 
         root.mainloop()
