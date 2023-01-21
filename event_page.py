@@ -13,7 +13,9 @@ dotenv.load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
 class Event:
-    def __init__(self, username: str):
+    def __init__(self, username: str, old_window: tk.Tk = None):
+        if old_window:
+            old_window.destroy()
         self.username = username
         self.window = tk.Tk()
         self.window.title("Events")
@@ -33,10 +35,13 @@ class Event:
             mini_frame.grid(row = 1, column = 0)
             join_btn = ttk.Button(mini_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = all_events[x][0]: join_event(m, self.username))
             join_btn.grid(row = 0, column = 0, padx = 10)
-            details_btn = ttk.Button(mini_frame, text = "More Details", command = lambda m = all_events[x][0]: EventView(self.username, m))
+            details_btn = ttk.Button(mini_frame, text = "More Details", command = lambda m = all_events[x][0]: EventView(self.username, m, self.window))
             details_btn.grid(row = 0, column = 1, padx = 10)
             all_posts.append(mega_frame)
         
+        create_event_btn = ttk.Button(self.main_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
+        create_event_btn.grid(row = len(all_events), column = 1)
+
         self.window.update()
         if self.window.winfo_height() < 300:
             self.window.geometry("500x300")
@@ -44,9 +49,15 @@ class Event:
         self.sidebar = Sidebar(self.window)
 
         self.window.mainloop()
+    
+    def create_event(self):
+        self.window.destroy()
+        EventCreate(self.username)
 
 class EventView:
-    def __init__(self, username: str, id: int):
+    def __init__(self, username: str, id: int, old_window: tk.Tk):
+        old_window.destroy()
+        self.username = username
         self.window = tk.Tk()
         self.window.title("Events")
         self.window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
@@ -82,15 +93,28 @@ class EventView:
         location_lbl = ttk.Label(self.main_frame, text = event_data[6])
         location_lbl.grid(row = 4, column = 1, pady = (0, 10))
 
-        author_name_lbl = ttk.Label(self.main_frame, text = "Description:")
+        author_name_lbl = ttk.Label(self.main_frame, text = "Author:")
         author_name_lbl.grid(row = 5, column = 0, pady = (0, 10), padx = 10)
-        author_lbl = ttk.Label(self.main_frame, text = username)
+        author_lbl = ttk.Label(self.main_frame, text = self.username)
         author_lbl.grid(row = 5, column = 1)
 
         attendees_name_lbl = ttk.Label(self.main_frame, text = "Attendees:")
         attendees_name_lbl.grid(row = 6, column = 0, pady = (0, 10), padx = 10)
-        attendees_lbl = ttk.Label(self.main_frame, text = len(event_data[7].split(",")))
+        try:
+            text = len(event_data[7].split(","))
+        except:
+            text = 0
+        attendees_lbl = ttk.Label(self.main_frame, text = text)
         attendees_lbl.grid(row = 6, column = 1)
+
+        back_btn = ttk.Button(self.main_frame, text = "Back", command = lambda m = self.username: Event(m, self.window))
+        back_btn.grid(row = 7, column = 0)
+        join_btn = ttk.Button(self.main_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = id: join_event(m, self.username))
+        join_btn.grid(row = 7, column = 1)
+
+        self.window.update()
+        self.sidebar = Sidebar(self.window)
+        self.window.mainloop()
 
 
 class EventCreate:
