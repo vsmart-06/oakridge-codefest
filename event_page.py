@@ -57,7 +57,7 @@ class Event:
     def join_btn(self, id):
         join_event(id, self.username)
         sub_window = tk.Toplevel()
-        ttk.Label(sub_window, text = "You have successfully joined the event!", borderline = 1).pack(padx = 10, pady = 10)
+        ttk.Label(sub_window, text = "You have successfully joined the event!", borderwidth = 1).pack(padx = 10, pady = 10)
 
 class EventView:
     def __init__(self, username: str, id: int, old_window: tk.Tk):
@@ -124,7 +124,7 @@ class EventView:
     def join_btn(self, id):
         join_event(id, self.username)
         sub_window = tk.Toplevel()
-        ttk.Label(sub_window, text = "You have successfully joined the event!", borderline = 1).pack(padx = 10, pady = 10)
+        ttk.Label(sub_window, text = "You have successfully joined the event!", borderwidth = 1).pack(padx = 10, pady = 10)
 
 
 class EventCreate:
@@ -189,8 +189,12 @@ class EventCreate:
         self.location_btn = ttk.Button(self.location_frame, text = "Search", style = "Accent.TButton", command = self.search_place)
         self.location_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
         
-        self.create_btn = ttk.Button(self.main_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
-        self.create_btn.grid(row = 5, column = 1, padx = 10, pady = (0, 10), sticky = "e")
+        btns_frame = ttk.Frame(self.main_frame)
+        btns_frame.grid(row = 5, column = 1)
+        self.create_btn = ttk.Button(btns_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
+        self.create_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
+        self.back_btn = ttk.Button(btns_frame, text = "Back", command = lambda m = self.username: Event(m, self.window))
+        self.back_btn.grid(row = 0, column = 0, padx = 10, pady = (0, 10))
 
         self.window.update()
         self.sidebar = Sidebar(self.window)
@@ -302,5 +306,14 @@ class EventCreate:
             location = f"'{location}'"
 
         new_event(self.username, title, description, date, time, location)
+
+        self.window.destroy()
+        sub_window = tk.Tk()
+        sub_window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
+        ttk.Style().theme_use("forest-dark")
+        confirmation = ttk.Label(sub_window, text = "You have successfully created the event!", borderwidth = 1)
+        confirmation.pack(padx = 10, pady = 10)
+        sub_window.mainloop()
+        Event(self.username, sub_window)
 
 Event("vishnu")
