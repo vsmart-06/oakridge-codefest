@@ -40,7 +40,7 @@ class Events:
         self.cal.set_date(datetime.date.today())
         self.cal.grid(row = 2, column = 1, padx = 10, pady = (0, 10), sticky = "w")
 
-        self.time_label = ttk.Label(self.main_frame, text = "Time: ")
+        self.time_label = ttk.Label(self.main_frame, text = "Time:")
         self.time_label.grid(row = 3, column = 0, padx = 10, pady = (0, 10))
         self.time_frame = ttk.Frame(self.main_frame)
         self.time_frame.grid(row = 3, column = 1, padx = 10, pady = (0, 10), sticky = "ew")
@@ -50,8 +50,10 @@ class Events:
         self.colon.grid(row = 0, column = 1)
         self.time_minutes = ttk.Spinbox(self.time_frame, from_ = 0, to = 59)
         self.time_minutes.grid(row = 0, column = 2)
-        self.time_hour.set(0)
-        self.time_minutes.set(0)
+        self.time_hour.set("00")
+        self.time_minutes.set("00")
+        self.time_hour.bind("<FocusOut>", lambda m = True: self.check_time(m))
+        self.time_minutes.bind("<FocusOut>", lambda m = False: self.check_time(m))
 
         self.location_label = ttk.Label(self.main_frame, text = "Location:")
         self.location_label.grid(row = 4, column = 0, padx = 10, pady = (0, 10), sticky = "n")
@@ -62,7 +64,7 @@ class Events:
         self.location_btn = ttk.Button(self.location_frame, text = "Search", style = "Accent.TButton", command = self.search_place)
         self.location_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
         
-        self.create_btn = ttk.Button(self.main_frame, text = "Create Event", style = "Accent.TButton")
+        self.create_btn = ttk.Button(self.main_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
         self.create_btn.grid(row = 5, column = 1, padx = 10, pady = (0, 10), sticky = "e")
 
         self.window.update()
@@ -82,10 +84,42 @@ class Events:
         
         self.place_btns = []
         for x in range(len(place_names)):
-            self.place_btns.append(ttk.Button(places_frame, text = place_names[x]))
+            self.place_btns.append(ttk.Button(places_frame, text = place_names[x], command = lambda m = x: self.choose_place(m)))
             self.place_btns[-1].grid(row = x, column = 0, pady = (0, 5), sticky = "ew")
 
         self.window.update()
         self.sidebar = Sidebar(self.window)
+    
+    def choose_place(self, index):
+        place = self.place_btns[index]["text"]
+        self.location_entry.delete(0, "end")
+        self.location_entry.insert(0, place)
+
+    def check_time(self, hour):
+        try:
+            int(self.time_hour.get())
+        except:
+            self.time_hour.set("00")
+        
+        try:
+            int(self.time_minutes.get())
+        except:
+            self.time_minutes.set("00")
+
+        if hour:
+            if not (0 <= int(self.time_hour.get()) <= 24):
+                self.time_hour.set("00")
+                
+        else:
+            if not (0 <= int(self.time_minutes.get()) <= 59):
+                self.time_hour.set("00")
+
+    def create_event(self):
+        title = self.title_entry.get()
+        description = self.description_entry.get()
+        date = self.cal.get_date()
+        time = self.time_hour.get()+":"+self.time_minutes.get()
+        location = self.location_entry.get()
+
 
 Events()
