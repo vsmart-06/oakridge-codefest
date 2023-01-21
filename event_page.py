@@ -47,7 +47,51 @@ class Event:
 
 class EventView:
     def __init__(self, username: str, id: int):
-        pass
+        self.window = tk.Tk()
+        self.window.title("Events")
+        self.window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
+        ttk.Style().theme_use("forest-dark")
+
+        event_data = get_event(id)
+
+        self.main_frame = ttk.Frame(self.window)
+        self.main_frame.grid(row = 0, column = 1)
+
+        title_name_lbl = ttk.Label(self.main_frame, text = "Title:")
+        title_name_lbl.grid(row = 0, column = 0, pady = 10, padx = 10)
+        title_lbl = ttk.Label(self.main_frame, text = event_data[2])
+        title_lbl.grid(row = 0, column = 1, pady = 10, padx = 10)
+
+        description_name_lbl = ttk.Label(self.main_frame, text = "Description:")
+        description_name_lbl.grid(row = 1, column = 0, pady = (0, 10), padx = 10)
+        description_lbl = ttk.Label(self.main_frame, text = event_data[3])
+        description_lbl.grid(row = 1, column = 1, pady = (0, 10))
+
+        date_name_lbl = ttk.Label(self.main_frame, text = "Date:")
+        date_name_lbl.grid(row = 2, column = 0, pady = (0, 10), padx = 10)
+        date_lbl = ttk.Label(self.main_frame, text = event_data[4])
+        date_lbl.grid(row = 2, column = 1, pady = (0, 10))
+
+        time_name_lbl = ttk.Label(self.main_frame, text = "Time:")
+        time_name_lbl.grid(row = 3, column = 0, pady = (0, 10), padx = 10)
+        time_lbl = ttk.Label(self.main_frame, text = event_data[5])
+        time_lbl.grid(row = 3, column = 1, pady = (0, 10))
+
+        location_name_lbl = ttk.Label(self.main_frame, text = "Location:")
+        location_name_lbl.grid(row = 4, column = 0, pady = (0, 10), padx = 10)
+        location_lbl = ttk.Label(self.main_frame, text = event_data[6])
+        location_lbl.grid(row = 4, column = 1, pady = (0, 10))
+
+        author_name_lbl = ttk.Label(self.main_frame, text = "Description:")
+        author_name_lbl.grid(row = 5, column = 0, pady = (0, 10), padx = 10)
+        author_lbl = ttk.Label(self.main_frame, text = username)
+        author_lbl.grid(row = 5, column = 1)
+
+        attendees_name_lbl = ttk.Label(self.main_frame, text = "Attendees:")
+        attendees_name_lbl.grid(row = 6, column = 0, pady = (0, 10), padx = 10)
+        attendees_lbl = ttk.Label(self.main_frame, text = len(event_data[7].split(",")))
+        attendees_lbl.grid(row = 6, column = 1)
+
 
 class EventCreate:
     def __init__(self, username: str):
