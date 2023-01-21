@@ -11,7 +11,7 @@ c.execute('''
 ''')
 c.execute('''
     CREATE TABLE IF NOT EXISTS events (
-        id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+        id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
         title STRING NOT NULL,
         description STRING,
@@ -56,7 +56,34 @@ def user_signup(username, password):
 def new_event(username, title, description, date, time, location):
     conn = db.connect("oakridge-codefest/oakridge-codefest.db")
     c = conn.cursor()
-    c.execute(f"INSERT INTO events VALUES ({username}, {title}, {description}, {date}, {time}, {location}, {None})")
+    c.execute(f"INSERT INTO events (username, title, description, date, time, location) VALUES ('{username}', {title}, {description}, {date}, {time}, {location})")
+    conn.commit()
+    c.close()
+    conn.close()
+
+def get_event(id = None):
+    conn = db.connect("oakridge-codefest/oakridge-codefest.db")
+    c = conn.cursor()
+    if not id:
+        c.execute("SELECT * FROM events")
+        data = c.fetchall()
+    else:
+        c.execute(f"SELECT * FROM events WHERE id = {id}")
+        data = c.fetchone()
+    c.close()
+    conn.close()
+    return data
+
+def join_event(id, username):
+    conn = db.connect("oakridge-codefest/oakridge-codefest.db")
+    c = conn.cursor()
+    c.execute(f"SELECT attendess FROM events WHERE id = {id}")
+    attendees = c.fetchone()
+    if attendees:
+        attendees += f",{username}"
+    else:
+        attendees = username
+    c.execute(f"UPDATE TABLE events SET attendees = '{attendees}'")
     conn.commit()
     c.close()
     conn.close()

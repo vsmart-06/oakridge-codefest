@@ -6,11 +6,48 @@ from sidebar import Sidebar
 import os
 import dotenv
 import requests
-from records import new_event
+from records import new_event, get_event, join_event
 
 dotenv.load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
+
+class Event:
+    def __init__(self, username: str):
+        self.username = username
+        self.window = tk.Tk()
+        self.window.title("Events")
+        self.window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
+        ttk.Style().theme_use("forest-dark")
+
+        all_events = get_event()
+        all_posts = []
+        self.main_frame = ttk.Frame(self.window)
+        self.main_frame.grid(row = 0, column = 1, padx = 10)
+        for x in range(len(all_events)):
+            mega_frame = ttk.Frame(self.main_frame)
+            mega_frame.grid(row = x, column = 1, pady = 10)
+            title_lbl = ttk.Label(mega_frame, text = all_events[x][2])
+            title_lbl.grid(row = 0, column = 0, pady = 10)
+            mini_frame = ttk.Frame(mega_frame)
+            mini_frame.grid(row = 1, column = 0)
+            join_btn = ttk.Button(mini_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = all_events[x][0]: join_event(m, self.username))
+            join_btn.grid(row = 0, column = 0, padx = 10)
+            details_btn = ttk.Button(mini_frame, text = "More Details", command = lambda m = all_events[x][0]: EventView(self.username, m))
+            details_btn.grid(row = 0, column = 1, padx = 10)
+            all_posts.append(mega_frame)
+        
+        self.window.update()
+        if self.window.winfo_height() < 300:
+            self.window.geometry("500x300")
+        self.window.update()
+        self.sidebar = Sidebar(self.window)
+
+        self.window.mainloop()
+
+class EventView:
+    def __init__(self, username: str, id: int):
+        pass
 
 class EventCreate:
     def __init__(self, username: str):
@@ -172,10 +209,9 @@ class EventCreate:
         date = self.cal.get_date()
         time = self.time_hour.get()+":"+self.time_minutes.get()
         location = self.location_entry.get().strip()
-        if title == "":
-            title = None
+        title = f"'{title}'"
         if description == "":
-            description = None
+            description = "NULL"
         else:
             description = f"'{description}'"
         if not self.check_date():
@@ -183,8 +219,10 @@ class EventCreate:
         date = f"'{date}'"
         time = f"'{time}'"
         if location == "":
-            location = None
+            location = "NULL"
         else:
             location = f"'{location}'"
 
         new_event(self.username, title, description, date, time, location)
+
+Event("vishnu")
