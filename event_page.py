@@ -130,6 +130,10 @@ class Events:
             self.error_lbl_title = ttk.Label(self.title_mega_frame, text = "Make your title within 10 words", foreground = "red")
             self.error_lbl_title.grid(row = 1, column = 0, pady = (0, 10))
         else:
+            if title == "":
+                self.error_lbl_title = ttk.Label(self.title_mega_frame, text = "Title is a required field", foreground = "red")
+                self.error_lbl_title.grid(row = 1, column = 0, pady = (0, 10))
+                return
             try:
                 self.error_lbl_title.grid_forget()
             except:
@@ -184,6 +188,3 @@ class Events:
             location = f"'{location}'"
 
         new_event(self.username, title, description, date, time, location)
-
-
-Events("noob")

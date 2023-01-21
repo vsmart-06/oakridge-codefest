@@ -30,9 +30,9 @@ class Login:
         self.window.mainloop()
 
     def login(self):
-        username = self.username_ent.get()
-        password = self.password_ent.get()
-        result = user_login(username, password)
+        self.username = self.username_ent.get()
+        self.password = self.password_ent.get()
+        result = user_login(self.username, self.password)
         if not result:
             msg = "Invalid username or password"
             colour = "red"
@@ -44,9 +44,9 @@ class Login:
             self.window.destroy()
 
     def signup(self):
-        username = self.username_ent.get()
-        password = self.password_ent.get()
-        result = user_signup(username, password)
+        self.username = self.username_ent.get()
+        self.password = self.password_ent.get()
+        result = user_signup(self.username, self.password)
         if not result:
             msg = "Username already exists"
             colour = "red"

@@ -4,4 +4,4 @@ from login_page import Login
 from event_page import Events
 
 login_page = Login()
-event_page = Events()
+event_page = Events(login_page.username)
