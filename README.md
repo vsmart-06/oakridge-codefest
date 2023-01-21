@@ -3,28 +3,16 @@
 THEME:  Environmental sustainability 
 
 IDEAS: 
-- App: Collaborating platform
+- App: Community for eco-conscious individuals to collaborate
 
-- [ ] PRIORITY 1: Calculating carbon footprint => put in different bills (electricity, water, etc.) and shows graphs and trends 
+- [ ] PRIORITY 1: Checking how green your electricity is => Use IP address to get geo-location and connect to API to check how the state gets energy
 
-- [ ] PRIORITY 2: Gives recommendations on reducing carbon footprint 
+- [ ] PRIORITY 2: Organize events for people to collaborate on, examples are plant a tree, clean a lake, etc. 
 
-- [ ] PRIORITY 3: Can have a leaderboard with the community (who saved the most) => incentivize with goals and rewards 
+- [ ] PRIORITY 3: Allow users to publish posts on their achievements regarding sustainability, updates on their work, etc. 
 
-- [ ] PRIORITY 4: NGOs put in events which you can search and attend
+- [ ] PRIORITY 4: Think about new ideas regarding waste collection, etc.
 
 - Front-end: Python tkinter
 
-- Back-end: MySQL 
-
-- Login:
-
-- [ ] Member
-
-- [ ] NGO
-
-- [ ] Admin
-
-- Plausible ideas
-
-- [ ] Integrate ChatGPT
+- Back-end: SQLite
