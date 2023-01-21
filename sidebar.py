@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from home_page import Home
-from calculator import Calculator
-from event_page import Event
+#from home_page import Home
+#from calculator import Calculator
+#from event_page import Event
 
 class Sidebar:
     def __init__(self, window: tk.Tk, username: str, expand: bool = False):
@@ -64,8 +64,14 @@ class Sidebar:
     def open_tab(self, index):
         self.window.destroy()
         if index == 0:
+            from home_page import Home
             Home(self.username)
         elif index == 1:
+            from calculator import Calculator
             Calculator(self.username)
         elif index == 3:
+            from event_page import Event
             Event(self.username)
+        elif index == 4:
+            from login_page import Login
+            Login()
