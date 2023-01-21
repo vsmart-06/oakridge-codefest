@@ -40,7 +40,7 @@ class Event:
             all_posts.append(mega_frame)
         
         create_event_btn = ttk.Button(self.main_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
-        create_event_btn.grid(row = len(all_events), column = 1)
+        create_event_btn.grid(row = len(all_events), column = 1, pady = (0, 10))
 
         self.window.update()
         if self.window.winfo_height() < 300:
