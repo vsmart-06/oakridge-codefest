@@ -23,13 +23,16 @@ class Events:
 
         self.title_label = ttk.Label(self.main_frame, text = "Title:")
         self.title_label.grid(row = 0, column = 0, padx = 10, pady = 10)
-        self.title_entry = ttk.Entry(self.main_frame, width = 50)
-        self.title_entry.grid(row = 0, column = 1, padx = 10, pady = 10, sticky = "ew")
+        self.title_mega_frame = ttk.Frame(self.main_frame)
+        self.title_mega_frame.grid(row = 0, column = 1, sticky = "ew")
+        self.title_entry = ttk.Entry(self.title_mega_frame, width = 50)
+        self.title_entry.grid(row = 0, column = 0, padx = 10, pady = 10, sticky = "ew")
+        self.title_entry.bind("<FocusOut>", self.check_title)
 
         self.description_label = ttk.Label(self.main_frame, text = "Description:")
         self.description_label.grid(row = 1, column = 0, padx = 10, pady = (0, 10), sticky = "n")
         self.description_mega_frame = ttk.Frame(self.main_frame)
-        self.description_mega_frame.grid(row = 1, column = 1, pady = (0, 10), sticky = "ew")
+        self.description_mega_frame.grid(row = 1, column = 1, sticky = "ew")
         self.description_frame = ttk.Frame(self.description_mega_frame, style = "Card", borderwidth = 1)
         self.description_frame.grid(row = 0, column = 0, padx = 10, pady = (0, 10), sticky = "ew")
         self.description_entry = tk.Text(self.description_frame, width = 50, height = 10, borderwidth = 0)
@@ -117,15 +120,26 @@ class Events:
             if not (0 <= int(self.time_minutes.get()) <= 59):
                 self.time_hour.set("00")
     
+    def check_title(self, m):
+        title = self.title_entry.get().strip()
+        if len(title.split()) > 10:
+            self.error_lbl_title = ttk.Label(self.title_mega_frame, text = "Make your title within 10 words", foreground = "red")
+            self.error_lbl_title.grid(row = 1, column = 0, pady = 10)
+        else:
+            try:
+                self.error_lbl_title.grid_forget()
+            except:
+                pass
+
+
     def check_description(self, m):
         description = self.description_entry.get("1.0", "end-1c").strip()
         if len(description.split()) > 300:
-            description = description.split()[:300]
-            self.error_lbl = ttk.Label(self.description_mega_frame, text = "Make your description within 300 words", foreground = "red")
-            self.error_lbl.grid(row = 1, column = 0)
+            self.error_lbl_description = ttk.Label(self.description_mega_frame, text = "Make your description within 300 words", foreground = "red")
+            self.error_lbl_description.grid(row = 1, column = 0, pady = 10)
         else:
             try:
-                self.error_lbl.grid_forget()
+                self.error_lbl_description.grid_forget()
             except:
                 pass
 
