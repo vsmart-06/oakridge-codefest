@@ -30,7 +30,7 @@ class Events:
         self.description_label.grid(row = 1, column = 0, padx = 10, pady = (0, 10), sticky = "n")
         self.description_frame = ttk.Frame(self.main_frame, style = "Card", borderwidth = 1)
         self.description_frame.grid(row = 1, column = 1, padx = 10, pady = (0, 10), sticky = "ew")
-        self.description_entry = tk.Text(self.description_frame, width = 50, height = 20, borderwidth = 0)
+        self.description_entry = tk.Text(self.description_frame, width = 50, height = 10, borderwidth = 0)
         self.description_entry.grid(row = 0, column = 0, padx = 5, pady = 5, sticky = "ew")
 
 
@@ -61,6 +61,9 @@ class Events:
         self.location_entry.grid(row = 0, column = 0, padx = 10, pady = (0, 10), sticky = "ew")
         self.location_btn = ttk.Button(self.location_frame, text = "Search", style = "Accent.TButton", command = self.search_place)
         self.location_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
+        
+        self.create_btn = ttk.Button(self.main_frame, text = "Create Event", style = "Accent.TButton")
+        self.create_btn.grid(row = 5, column = 1, padx = 10, pady = (0, 10), sticky = "e")
 
         self.window.update()
         self.sidebar = Sidebar(self.window)
