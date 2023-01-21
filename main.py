@@ -1,5 +1,5 @@
 from login_page import Login
-from event_page import Event
+from home_page import Home
 
 login_page = Login()
-event_page = Event(login_page.username)
+event_page = Home(login_page.username)

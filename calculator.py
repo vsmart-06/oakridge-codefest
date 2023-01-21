@@ -6,7 +6,8 @@ from sidebar import Sidebar
 
 
 class Calculator:
-    def __init__(self):
+    def __init__(self, username: str):
+        self.username = self.username
         self.root = tk.Tk()
         self.root.title("How Green Are You?")
         self.root.geometry("350x400")
@@ -27,7 +28,7 @@ class Calculator:
         button.grid(row=1, column=1,ipadx=10, ipady=5)
 
         self.root.update()
-        self.sidebar = Sidebar(self.root)
+        self.sidebar = Sidebar(self.root, self.username)
 
 
         self.root.mainloop()
@@ -37,6 +38,7 @@ class Calculator:
         self.value -= 1
         if self.value == 0:
             obj = IP()
+            obj.username = self.username
             obj.create_graph()
             Calculator()
 

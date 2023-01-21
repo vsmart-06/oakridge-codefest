@@ -2,17 +2,25 @@ import tkinter as tk
 from tkinter import ttk
 
 class Sidebar:
-    def __init__(self, window: tk.Tk):
+    def __init__(self, window: tk.Tk, username: str, expand: bool = False):
+        self.username = username
         self.window = window
         self.min_width = 0
         self.max_width = 120
-        self.cur_width = self.min_width
-        
+
         self.frame = ttk.Frame(self.window, height = self.window.winfo_height(), width = self.max_width)
         self.frame.grid(row = 0, column = 0)
         self.frame.grid_propagate(False)
 
-        self.side_btn = ttk.Button(self.frame, text = "≡", width = 3, command = self.change)
+        if not expand:
+            self.cur_width = self.min_width
+            self.expanded = False
+            self.side_btn = ttk.Button(self.frame, text = "≡", width = 3, command = self.change)
+        else:
+            self.cur_width = self.max_width
+            self.expanded = True
+            self.side_btn = ttk.Button(self.frame, text = "|||", width = 3, command = self.change)
+
         self.side_btn.grid(row = 0, column = 0, pady = 10, padx = 10, sticky = "w")
 
         self.sidebar = ttk.Frame(self.frame, height = self.window.winfo_height(), width = self.cur_width, style = "Card")

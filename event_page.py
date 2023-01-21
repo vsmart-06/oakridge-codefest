@@ -46,7 +46,7 @@ class Event:
         if self.window.winfo_height() < 300:
             self.window.geometry("500x300")
         self.window.update()
-        self.sidebar = Sidebar(self.window)
+        self.sidebar = Sidebar(self.window, self.username)
 
         self.window.mainloop()
     
@@ -118,7 +118,7 @@ class EventView:
         join_btn.grid(row = 7, column = 1, pady = (0, 10))
 
         self.window.update()
-        self.sidebar = Sidebar(self.window)
+        self.sidebar = Sidebar(self.window, self.username)
         self.window.mainloop()
     
     def join_btn(self, id):
@@ -197,7 +197,7 @@ class EventCreate:
         self.back_btn.grid(row = 0, column = 0, padx = 10, pady = (0, 10))
 
         self.window.update()
-        self.sidebar = Sidebar(self.window)
+        self.sidebar = Sidebar(self.window, self.username)
 
         self.window.mainloop()
     
@@ -217,7 +217,7 @@ class EventCreate:
             self.place_btns[-1].grid(row = x, column = 0, pady = (0, 5), sticky = "ew")
 
         self.window.update()
-        self.sidebar = Sidebar(self.window)
+        self.sidebar = Sidebar(self.window, self.username)
     
     def choose_place(self, index):
         place = self.place_btns[index]["text"]
@@ -227,7 +227,7 @@ class EventCreate:
         self.sidebar.side_btn.grid_forget()
         self.sidebar.sidebar.grid_forget()
         self.window.update()
-        self.sidebar = Sidebar(self.window)
+        self.sidebar = Sidebar(self.window, self.username)
 
     def check_time(self, hour):
         try:

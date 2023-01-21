@@ -123,7 +123,7 @@ class IP:
         button.grid(row=11, column=1, ipadx=10, ipady=5)
 
         root.update()
-        self.sidebar = Sidebar(root)
+        self.sidebar = Sidebar(root, self.username)
         
 
         root.mainloop()
