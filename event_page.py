@@ -124,7 +124,7 @@ class Events:
         title = self.title_entry.get().strip()
         if len(title.split()) > 10:
             self.error_lbl_title = ttk.Label(self.title_mega_frame, text = "Make your title within 10 words", foreground = "red")
-            self.error_lbl_title.grid(row = 1, column = 0, pady = 10)
+            self.error_lbl_title.grid(row = 1, column = 0, pady = (0, 10))
         else:
             try:
                 self.error_lbl_title.grid_forget()
@@ -136,7 +136,7 @@ class Events:
         description = self.description_entry.get("1.0", "end-1c").strip()
         if len(description.split()) > 300:
             self.error_lbl_description = ttk.Label(self.description_mega_frame, text = "Make your description within 300 words", foreground = "red")
-            self.error_lbl_description.grid(row = 1, column = 0, pady = 10)
+            self.error_lbl_description.grid(row = 1, column = 0, pady = (0, 10))
         else:
             try:
                 self.error_lbl_description.grid_forget()
