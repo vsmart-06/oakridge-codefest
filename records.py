@@ -11,12 +11,14 @@ c.execute('''
 ''')
 c.execute('''
     CREATE TABLE IF NOT EXISTS events (
-        username TEXT NOT NULL PRIMARY KEY,
+        id INT NOT NULL PRIMARY KEY AUTOINCREMENT,
+        username TEXT NOT NULL,
         title STRING NOT NULL,
         description STRING,
         date STRING NOT NULL,
         time STRING NOT NULL,
-        location STRING
+        location STRING,
+        attendees STRING
     )
 ''')
 conn.commit()
@@ -54,7 +56,7 @@ def user_signup(username, password):
 def new_event(username, title, description, date, time, location):
     conn = db.connect("oakridge-codefest/oakridge-codefest.db")
     c = conn.cursor()
-    c.execute(f"INSERT INTO events VALUES ({username}, {title}, {description}, {date}, {time}, {location})")
+    c.execute(f"INSERT INTO events VALUES ({username}, {title}, {description}, {date}, {time}, {location}, {None})")
     conn.commit()
     c.close()
     conn.close()

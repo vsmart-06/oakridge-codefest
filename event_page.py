@@ -12,7 +12,7 @@ dotenv.load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
 
-class Events:
+class EventCreate:
     def __init__(self, username: str):
         self.username = username
         self.window = tk.Tk()
