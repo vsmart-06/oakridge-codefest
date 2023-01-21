@@ -70,7 +70,7 @@ class IP:
         root = tk.Tk()
         root.title("How Green Are You?")
         root.geometry("490x500")
-        root.tk.call("source", "./forest-dark.tcl")
+        root.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
 
         def prop(n):
