@@ -10,7 +10,7 @@ class Calculator:
         self.root = tk.Tk()
         self.root.title("How Green Are You?")
         self.root.geometry("350x400")
-        self.root.tk.call("source", "./forest-dark.tcl")
+        self.root.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
 
         frame=ttk.Frame(self.root)
