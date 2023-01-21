@@ -78,12 +78,16 @@ def join_event(id, username):
     conn = db.connect("oakridge-codefest/oakridge-codefest.db")
     c = conn.cursor()
     c.execute(f"SELECT attendees FROM events WHERE id = {id}")
-    attendees = c.fetchone()
+    attendees = c.fetchone()[0]
+    if attendees:
+        attendees = attendees.split(",")
+        if username in attendees:
+            return
     if attendees:
         attendees += f",{username}"
     else:
         attendees = username
-    c.execute(f"UPDATE TABLE events SET attendees = '{attendees}'")
+    c.execute(f"UPDATE events SET attendees = '{attendees}'")
     conn.commit()
     c.close()
     conn.close()

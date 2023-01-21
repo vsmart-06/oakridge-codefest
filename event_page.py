@@ -33,7 +33,7 @@ class Event:
             title_lbl.grid(row = 0, column = 0, pady = 10)
             mini_frame = ttk.Frame(mega_frame)
             mini_frame.grid(row = 1, column = 0)
-            join_btn = ttk.Button(mini_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = all_events[x][0]: join_event(m, self.username))
+            join_btn = ttk.Button(mini_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = all_events[x][0]: self.join_btn(m))
             join_btn.grid(row = 0, column = 0, padx = 10)
             details_btn = ttk.Button(mini_frame, text = "More Details", command = lambda m = all_events[x][0]: EventView(self.username, m, self.window))
             details_btn.grid(row = 0, column = 1, padx = 10)
@@ -53,6 +53,11 @@ class Event:
     def create_event(self):
         self.window.destroy()
         EventCreate(self.username)
+    
+    def join_btn(self, id):
+        join_event(id, self.username)
+        sub_window = tk.Toplevel()
+        ttk.Label(sub_window, text = "You have successfully joined the event!", borderline = 1).pack(padx = 10, pady = 10)
 
 class EventView:
     def __init__(self, username: str, id: int, old_window: tk.Tk):
@@ -109,12 +114,17 @@ class EventView:
 
         back_btn = ttk.Button(self.main_frame, text = "Back", command = lambda m = self.username: Event(m, self.window))
         back_btn.grid(row = 7, column = 0)
-        join_btn = ttk.Button(self.main_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = id: join_event(m, self.username))
+        join_btn = ttk.Button(self.main_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = id: self.join_btn(m))
         join_btn.grid(row = 7, column = 1)
 
         self.window.update()
         self.sidebar = Sidebar(self.window)
         self.window.mainloop()
+    
+    def join_btn(self, id):
+        join_event(id, self.username)
+        sub_window = tk.Toplevel()
+        ttk.Label(sub_window, text = "You have successfully joined the event!", borderline = 1).pack(padx = 10, pady = 10)
 
 
 class EventCreate:
