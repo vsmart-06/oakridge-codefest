@@ -19,7 +19,7 @@ class Sidebar:
         else:
             self.cur_width = self.max_width
             self.expanded = True
-            self.side_btn = ttk.Button(self.frame, text = "|||", width = 3, command = self.change)
+            self.side_btn = ttk.Button(self.frame, text = "|||", width = 3)
 
         self.side_btn.grid(row = 0, column = 0, pady = 10, padx = 10, sticky = "w")
 

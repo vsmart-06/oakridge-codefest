@@ -4,6 +4,7 @@ from sidebar import Sidebar
 import openai
 import os
 import dotenv
+import textwrap
 
 dotenv.load_dotenv()
 
@@ -31,8 +32,12 @@ class Recommendation:
     
     def giveReccomendation(self):
         text = self.giverec()
-        myLabel = ttk.Label(self.frame, text = text)
-        myLabel.grid(row = 1, column = 1)
+        try:
+            self.myLabel.destroy()
+        except:
+            pass
+        self.myLabel = ttk.Label(self.frame, text = text)
+        self.myLabel.grid(row = 1, column = 1)
 
     def giverec(self):
         openai.api_key = API_KEY
@@ -41,7 +46,7 @@ class Recommendation:
         dataset = [file1, file2]
 
         model = "davinci"
-        prompt = "Fine-tune the model to give similar results when asked for reccomendations on possible events to be conducted to be more environmentally conscious: " + " | " .join(dataset)   
+        prompt = "Fine-tune the model to give similar results when asked for 1 reccomendation on possible events to be conducted to be more environmentally conscious: " + " | " .join(dataset)   
 
 
         response = openai.Completion.create(
@@ -54,5 +59,6 @@ class Recommendation:
             presence_penalty = 1,
         )
 
-
-        return response["choices"][0]["text"]
+        recc = response["choices"][0]["text"]
+        recc = textwrap.fill(recc, width = 50)
+        return recc

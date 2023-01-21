@@ -208,6 +208,10 @@ class EventCreate:
         if len(place_names) > 5:
             place_names = place_names[:5]
         
+        try:
+            self.places_frame.destroy()
+        except:
+            pass
         self.places_frame = ttk.Frame(self.location_frame)
         self.places_frame.grid(row = 1, column = 0, sticky = "ew")
         

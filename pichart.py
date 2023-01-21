@@ -5,6 +5,7 @@ from tkinter import ttk
 import matplotlib.pyplot as plt
 import numpy as np
 from sidebar import Sidebar
+from PIL import Image,ImageTk
 class IP:
     
     def percentdata(self):
@@ -29,13 +30,13 @@ class IP:
         
         #print(percentdata)
         #return percentdata
-        coal = float(percentdata["coal"])*10
-        gas = float(percentdata["gas"])*10
-        diesel = float(percentdata["diesel"])*10
-        thermal_total = float(percentdata["thermal_total"])*10
-        nuclear = float(percentdata["nuclear"])*10
-        hydro = float(percentdata["hydro"])*10
-        res = float(percentdata["res"])*10
+        coal = float(percentdata["coal"])
+        gas = float(percentdata["gas"])
+        diesel = float(percentdata["diesel"])
+        thermal_total = float(percentdata["thermal_total"])
+        nuclear = float(percentdata["nuclear"])
+        hydro = float(percentdata["hydro"])
+        res = float(percentdata["res"])
         arr = [coal, gas, diesel, thermal_total, nuclear, hydro, res]
         return arr
 
@@ -69,44 +70,31 @@ class IP:
     def create_graph(self):
         root = tk.Tk()
         root.title("How Green Are You?")
-        root.geometry("490x500")
-        root.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
+        root.geometry("850x650")
+        root.tk.call("source", "./forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
-
-        def prop(n):
-            return 360.0 * n / 1000
 
         frame=ttk.Frame(root)
         frame.grid(row=0, column=1, padx=10)
 
         myLabel = ttk.Label(frame, text='Pie Chart').grid(row=0, column=1)
-        c = tk.Canvas(frame, width=200, height=200)
-        c.grid(row=1, column=1)
-        sum1=0
-        array = self.percentdata()
-        c.create_arc((10,10,190,190), fill="#7FFFD4", outline="#000000", start=prop(0), extent = prop(array[0]))
-        sum1+=array[0]
-        c.create_arc((10,10,190,190), fill="#AAFF00", outline="#000000", start=prop(sum1), extent = prop(array[1]))
-        sum1+=array[1]
-        c.create_arc((10,10,190,190), fill="#097969", outline="#000000", start=prop(sum1), extent = prop(array[2]))
-        sum1+=array[2]
-        c.create_arc((10,10,190,190), fill="#355E3B", outline="#000000", start=prop(sum1), extent = prop(array[3]))
-        sum1+=array[3]
-        c.create_arc((10,10,190,190), fill="#C1E1C1", outline="#000000", start=prop(sum1), extent = prop(array[4]))
-        sum1+=array[4]
-        c.create_arc((10,10,190,190), fill="#93C572", outline="#000000", start=prop(sum1), extent = prop(array[5]))
-        sum1+=array[5]
-        c.create_arc((10,10,190,190), fill="#00FF7F", outline="#000000", start=prop(sum1), extent = prop(array[6]))
 
-        myLabel = ttk.Label(frame, text="KEY:",foreground="#FFFFFF").grid(row=2, column=1)
-        coal = ttk.Label(frame, text=" COAL ", background="#7FFFD4", foreground="#000000").grid(row=3, column=1)
-        gas = ttk.Label(frame, text=" GAS ", background="#AAFF00", foreground="#000000").grid(row=4, column=1)
-        diesel = ttk.Label(frame, text=" DIESEL ", background="#097969", foreground="#000000").grid(row=5, column=1)
-        thermal_total = ttk.Label(frame, text=" TOTAL THERMAL ", background="#355E3B", foreground="#000000").grid(row=6, column=1)
-        nuclear = ttk.Label(frame, text=" NUCLEAR ", background="#C1E1C1", foreground="#000000").grid(row=7, column=1)
-        hydro = ttk.Label(frame, text=" HYDRO ", background="#93C572", foreground="#000000").grid(row=8, column=1)
-        res = ttk.Label(frame, text=" RENEWABLE ENERGY SOURCES ", background="#00FF7F", foreground="#000000").grid(row=9, column=1)
-        empty = ttk.Label(frame, text="").grid(row=10, column=1)
+        # create pie chart and save as image How Green?
+        array = self.percentdata()
+        y = np.array([array[0], array[1], array[2], array[3], array[4], array[5], array[6]])
+        mylabels = ["Coal", "Gas", "Diesel", "Total Thermal", "Nuclear", "Hydro", "Renewable Energy Sources"]
+        colors=['#7FFFD4','#097969','#AAFF00','#228B22','#32CD32','#2AAA8A','#98FB98']
+
+        plt.pie(y, colors=colors, autopct='%1.2f%%')
+        plt.legend(labels=mylabels)
+        plt.savefig("How_Green")  
+        
+        # Create an object of tkinter ImageTk
+        img = ImageTk.PhotoImage(Image.open("How_Green.png"))
+
+        # Create a Label Widget to display the text or Image
+        label = ttk.Label(frame, image = img)
+        label.grid(row=1, column=1)
 
         self.value = 1
         def changeValue():
@@ -117,14 +105,18 @@ class IP:
                 self.value = 1
             else:
                 pass
-
+        
+        label = ttk.Label(frame, text="").grid(row=2,column=1)
         button = ttk.Button(frame, text="GO BACK", command=changeValue, style="Accent.TButton")
         ttk.Style().configure('TButton')
-        button.grid(row=11, column=1, ipadx=10, ipady=5)
+        button.grid(row=3, column=1, ipadx=10, ipady=5)
 
         root.update()
-        self.sidebar = Sidebar(root, self.username)
+        self.sidebar = Sidebar(root)
         
 
         root.mainloop()
+
+
+
 
