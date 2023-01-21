@@ -43,6 +43,8 @@ class Events:
         self.colon.grid(row = 0, column = 1)
         self.time_minutes = ttk.Spinbox(self.time_frame, from_ = 0, to = 59)
         self.time_minutes.grid(row = 0, column = 2)
+        self.time_hour.set(0)
+        self.time_minutes.set(0)
 
         self.location_label = ttk.Label(self.main_frame, text = "Location:")
         self.location_label.grid(row = 4, column = 0, padx = 10, pady = (0, 10))
