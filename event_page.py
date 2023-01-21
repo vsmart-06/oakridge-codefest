@@ -6,13 +6,15 @@ from sidebar import Sidebar
 import os
 import dotenv
 import requests
+from records import new_event
 
 dotenv.load_dotenv()
 
 API_KEY = os.getenv("API_KEY")
 
 class Events:
-    def __init__(self):
+    def __init__(self, username: str):
+        self.username = username
         self.window = tk.Tk()
         self.window.title("Events")
         self.window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
@@ -42,9 +44,11 @@ class Events:
 
         self.cal_label = ttk.Label(self.main_frame, text = "Choose the date for the event:")
         self.cal_label.grid(row = 2, column = 0, padx = 10, pady = (0, 10))
-        self.cal = DateEntry(self.main_frame)
+        self.cal_mega_frame = ttk.Frame(self.main_frame)
+        self.cal_mega_frame.grid(row = 2, column = 1, sticky = "ew")
+        self.cal = DateEntry(self.cal_mega_frame)
         self.cal.set_date(datetime.date.today())
-        self.cal.grid(row = 2, column = 1, padx = 10, pady = (0, 10), sticky = "w")
+        self.cal.grid(row = 0, column = 0, padx = 10, pady = (0, 10), sticky = "w")
 
         self.time_label = ttk.Label(self.main_frame, text = "Time:")
         self.time_label.grid(row = 3, column = 0, padx = 10, pady = (0, 10))
@@ -142,14 +146,44 @@ class Events:
                 self.error_lbl_description.grid_forget()
             except:
                 pass
+    
+    def check_date(self):
+        chosen_date = self.cal.get_date()
+        today = datetime.date.today()
+        if str(chosen_date - today)[0] == "-":
+            self.error_lbl_date = ttk.Label(self.cal_mega_frame, text = "You cannot organize an event before today!", foreground = "red")
+            self.error_lbl_date.grid(row = 1, column = 0, pady = (0, 10), padx = 10)
+            return False
+        else:
+            try:
+                self.error_lbl_date.grid_forget()
+            except:
+                pass
+            return True
 
 
     def create_event(self):
-        title = self.title_entry.get()
-        description = self.description_entry.get("1.0", "end-1c")
+        title = self.title_entry.get().strip()
+        description = self.description_entry.get("1.0", "end-1c").strip()
         date = self.cal.get_date()
         time = self.time_hour.get()+":"+self.time_minutes.get()
-        location = self.location_entry.get()
+        location = self.location_entry.get().strip()
+        if title == "":
+            title = None
+        if description == "":
+            description = None
+        else:
+            description = f"'{description}'"
+        if not self.check_date():
+            return
+        date = f"'{date}'"
+        time = f"'{time}'"
+        if location == "":
+            location = None
+        else:
+            location = f"'{location}'"
+
+        new_event(self.username, title, description, date, time, location)
 
 
-Events()
+Events("noob")
