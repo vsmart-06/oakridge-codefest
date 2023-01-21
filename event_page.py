@@ -224,6 +224,8 @@ class EventCreate:
         self.location_entry.delete(0, "end")
         self.location_entry.insert(0, place)
         self.places_frame.destroy()
+        self.sidebar.side_btn.grid_forget()
+        self.sidebar.sidebar.grid_forget()
         self.window.update()
         self.sidebar = Sidebar(self.window)
 
@@ -294,6 +296,8 @@ class EventCreate:
         date = self.cal.get_date()
         time = self.time_hour.get()+":"+self.time_minutes.get()
         location = self.location_entry.get().strip()
+        if title == "":
+            return
         title = f"'{title}'"
         if description == "":
             description = "NULL"
