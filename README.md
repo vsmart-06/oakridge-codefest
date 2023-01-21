@@ -1,5 +1,7 @@
 # Oakridge Codefest
 
+TEAM: The Green Gurus
+
 THEME:  Environmental sustainability 
 
 IDEAS: 
