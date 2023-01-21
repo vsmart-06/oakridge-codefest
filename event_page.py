@@ -3,6 +3,13 @@ from tkinter import ttk
 from tkcalendar import DateEntry
 import datetime
 from sidebar import Sidebar
+import os
+import dotenv
+import requests
+
+dotenv.load_dotenv()
+
+API_KEY = os.getenv("API_KEY")
 
 class Events:
     def __init__(self):
@@ -47,17 +54,35 @@ class Events:
         self.time_minutes.set(0)
 
         self.location_label = ttk.Label(self.main_frame, text = "Location:")
-        self.location_label.grid(row = 4, column = 0, padx = 10, pady = (0, 10))
+        self.location_label.grid(row = 4, column = 0, padx = 10, pady = (0, 10), sticky = "n")
         self.location_frame = ttk.Frame(self.main_frame)
         self.location_frame.grid(row = 4, column = 1)
         self.location_entry = ttk.Entry(self.location_frame, width = 50)
         self.location_entry.grid(row = 0, column = 0, padx = 10, pady = (0, 10), sticky = "ew")
-        self.location_btn = ttk.Button(self.location_frame, text = "Search", style = "Accent.TButton")
+        self.location_btn = ttk.Button(self.location_frame, text = "Search", style = "Accent.TButton", command = self.search_place)
         self.location_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
 
         self.window.update()
         self.sidebar = Sidebar(self.window)
 
         self.window.mainloop()
+    
+    def search_place(self):
+        place_string = self.location_entry.get()
+        places = requests.get(f"https://maps.googleapis.com/maps/api/place/autocomplete/json?input={place_string}&key={API_KEY}").json()["predictions"]
+        place_names = [x["description"] for x in places]
+        if len(place_names) > 5:
+            place_names = place_names[:5]
+        
+        places_frame = ttk.Frame(self.location_frame)
+        places_frame.grid(row = 1, column = 0, sticky = "ew")
+        
+        self.place_btns = []
+        for x in range(len(place_names)):
+            self.place_btns.append(ttk.Button(places_frame, text = place_names[x]))
+            self.place_btns[-1].grid(row = x, column = 0, pady = (0, 5), sticky = "ew")
+
+        self.window.update()
+        self.sidebar = Sidebar(self.window)
 
 Events()
