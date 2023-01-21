@@ -6,7 +6,7 @@ class Login:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("Login")
-        self.window.tk.call("source", "./my-private-repo/forest-dark.tcl")
+        self.window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
 
         self.username_lbl = ttk.Label(self.window, text = "Username: ")
