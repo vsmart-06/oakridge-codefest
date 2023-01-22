@@ -90,10 +90,10 @@ class IP:
 
         plt.pie(y, colors=colors, autopct='%1.2f%%')
         plt.legend(labels=mylabels)
-        plt.savefig("How_Green")  
+        plt.savefig("./oakridge-codefest/How_Green.png")  
         
         # Create an object of tkinter ImageTk
-        img = ImageTk.PhotoImage(Image.open("How_Green.png"))
+        img = ImageTk.PhotoImage(Image.open("./oakridge-codefest/How_Green.png"))
 
         # Create a Label Widget to display the text or Image
         label = ttk.Label(frame, image = img)

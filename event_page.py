@@ -210,8 +210,8 @@ class EventCreate:
         self.time_minutes.grid(row = 0, column = 2)
         self.time_hour.set("00")
         self.time_minutes.set("00")
-        self.time_hour.bind("<FocusOut>", lambda m = True: self.check_time(m))
-        self.time_minutes.bind("<FocusOut>", lambda m = False: self.check_time(m))
+        self.time_hour.bind("<FocusOut>", lambda event, m = True: self.check_time(m))
+        self.time_minutes.bind("<FocusOut>", lambda event, m = False: self.check_time(m))
 
         self.location_label = ttk.Label(self.main_frame, text = "Location:")
         self.location_label.grid(row = 4, column = 0, padx = 10, pady = (0, 10), sticky = "n")
@@ -266,7 +266,7 @@ class EventCreate:
         self.window.update()
         self.sidebar = Sidebar(self.window, self.username)
 
-    def check_time(self, hour):
+    def check_time(self, m):
         try:
             int(self.time_hour.get())
         except:
@@ -277,13 +277,12 @@ class EventCreate:
         except:
             self.time_minutes.set("00")
 
-        if hour:
+        if m:
             if not (0 <= int(self.time_hour.get()) <= 24):
                 self.time_hour.set("00")
-                
         else:
             if not (0 <= int(self.time_minutes.get()) <= 59):
-                self.time_hour.set("00")
+                self.time_minutes.set("00")
     
     def check_title(self, m):
         title = self.title_entry.get().strip()
