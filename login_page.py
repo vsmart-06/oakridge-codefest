@@ -43,6 +43,7 @@ class Login:
         else:
             msg = "Logged in successfully!"
             colour = "green"
+            self.logged_in = True
         self.error_lbl.config(text = msg, foreground = colour)
         if result:
             self.window.destroy()

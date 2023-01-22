@@ -73,5 +73,4 @@ class Sidebar:
             from event_page import Event
             Event(self.username)
         elif index == 4:
-            from login_page import Login
-            Login()
+            pass
