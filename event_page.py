@@ -78,7 +78,7 @@ class Event:
     
     def download(self):
         if len(self.cal_ics.events) == 0:
-            self.error_lbl = ttk.Label(self.main_frame, text = "You do not have an .ics file to download!", foreground = "red")
+            self.error_lbl = ttk.Label(self.main_frame, text = "You do not have an .ics file to download as you have not joined any events!", foreground = "red")
             self.error_lbl.grid(row = self.length+2, column = 1)
         else:
             try:
