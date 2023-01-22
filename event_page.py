@@ -78,9 +78,13 @@ class Event:
     
     def download(self):
         if len(self.cal_ics.events) == 0:
-            error_lbl = ttk.Label(self.main_frame, text = "You do not have an .ics file to download!", foreground = "red")
-            error_lbl.grid(row = self.length+2, column = 1)
+            self.error_lbl = ttk.Label(self.main_frame, text = "You do not have an .ics file to download!", foreground = "red")
+            self.error_lbl.grid(row = self.length+2, column = 1)
         else:
+            try:
+                self.error_lbl.grid_forget()
+            except:
+                pass
             with open('./oakridge-codefest/my_events.ics', 'w') as f: f.writelines(self.cal_ics.serialize_iter())
             
 
