@@ -334,10 +334,12 @@ class EventCreate:
         location = self.location_entry.get().strip()
         if title == "":
             return
+        title = title.replace("'", "")
         title = f"'{title}'"
         if description == "":
             description = "NULL"
         else:
+            description = description.replace("'", "")
             description = f"'{description}'"
         if not self.check_date():
             return
@@ -346,6 +348,7 @@ class EventCreate:
         if location == "":
             location = "NULL"
         else:
+            location = location.replace("'", "")
             location = f"'{location}'"
 
         new_event(self.username, title, description, date, time, location)
