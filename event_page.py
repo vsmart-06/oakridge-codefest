@@ -3,6 +3,8 @@ from tkinter import ttk
 from tkcalendar import DateEntry
 import datetime
 import ics
+from urllib import request
+from PIL import Image, ImageTk
 from sidebar import Sidebar
 import os
 import dotenv
@@ -102,7 +104,7 @@ class EventView:
         self.event_data = get_event(id)
 
         self.main_frame = ttk.Frame(self.window)
-        self.main_frame.grid(row = 0, column = 1)
+        self.main_frame.grid(row = 0, column = 1, padx = 10)
 
         title_name_lbl = ttk.Label(self.main_frame, text = "Title:")
         title_name_lbl.grid(row = 0, column = 0, pady = 10, padx = 10)
@@ -222,12 +224,12 @@ class EventCreate:
         self.location_btn = ttk.Button(self.location_frame, text = "Search", style = "Accent.TButton", command = self.search_place)
         self.location_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
         
-        btns_frame = ttk.Frame(self.main_frame)
-        btns_frame.grid(row = 5, column = 1)
-        self.create_btn = ttk.Button(btns_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
-        self.create_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
-        self.back_btn = ttk.Button(btns_frame, text = "Back", command = lambda m = self.username: Event(m, self.window, self.cal_ics))
-        self.back_btn.grid(row = 0, column = 0, padx = 10, pady = (0, 10))
+        self.btns_frame = ttk.Frame(self.main_frame)
+        self.btns_frame.grid(row = 5, column = 1)
+        self.create_btn = ttk.Button(self.btns_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
+        self.create_btn.grid(row = 0, column = 2, padx = 10, pady = (0, 10))
+        self.back_btn = ttk.Button(self.btns_frame, text = "Back", command = lambda m = self.username: Event(m, self.window, self.cal_ics))
+        self.back_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
 
         self.window.update()
         self.sidebar = Sidebar(self.window, self.username)
@@ -245,6 +247,10 @@ class EventCreate:
             self.places_frame.destroy()
         except:
             pass
+        try:
+            self.map_lbl.destroy()
+        except:
+            pass
         self.places_frame = ttk.Frame(self.location_frame)
         self.places_frame.grid(row = 1, column = 0, sticky = "ew")
         
@@ -260,11 +266,28 @@ class EventCreate:
         place = self.place_btns[index]["text"]
         self.location_entry.delete(0, "end")
         self.location_entry.insert(0, place)
-        self.places_frame.destroy()
-        self.sidebar.side_btn.grid_forget()
-        self.sidebar.sidebar.grid_forget()
-        self.window.update()
-        self.sidebar = Sidebar(self.window, self.username)
+        
+        place = place.replace(" ", "")
+        self.map = f"https://maps.googleapis.com/maps/api/staticmap?center={place}&size=200x200&key={API_KEY}"
+        request.urlretrieve(self.map, "./oakridge-codefest/map.png")
+        
+        try:
+            self.places_frame.destroy()
+        except:
+            pass
+        try:
+            self.map_lbl.destroy()
+        except:
+            pass
+
+        self.img = ImageTk.PhotoImage(Image.open("./oakridge-codefest/map.png"))
+        self.map_lbl = ttk.Label(self.btns_frame, image = self.img)
+        self.map_lbl.grid(row = 0, column = 0, padx = 10, pady = 10)
+
+        #self.sidebar.side_btn.grid_forget()
+        #self.sidebar.sidebar.grid_forget()
+        #self.window.update()
+        #self.sidebar = Sidebar(self.window, self.username)
 
     def check_time(self, m):
         try:
@@ -333,6 +356,8 @@ class EventCreate:
         time = self.time_hour.get()+":"+self.time_minutes.get()
         location = self.location_entry.get().strip()
         if title == "":
+            self.error_lbl_title = ttk.Label(self.title_mega_frame, text = "Title is a required field", foreground = "red")
+            self.error_lbl_title.grid(row = 1, column = 0, pady = (0, 10))
             return
         title = title.replace("'", "")
         title = f"'{title}'"
