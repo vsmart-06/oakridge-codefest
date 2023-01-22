@@ -98,6 +98,7 @@ class EventView:
         self.username = username
         self.window = tk.Tk()
         self.window.title("Events")
+        self.window.geometry("500x500")
         self.window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
 
