@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkcalendar import DateEntry
 import datetime
+import ics
 from sidebar import Sidebar
 import os
 import dotenv
@@ -12,8 +13,23 @@ dotenv.load_dotenv()
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
 
+def generate_ics(cal: ics.Calendar, title: str, description: str, time: str, date: str, location: str):
+    event = ics.Event()
+    event.name = title
+    year, month, day = list(map(int, date.split("-")))
+    hours, minutes = list(map(int, time.split(":")))
+    time = datetime.datetime(year, month, day, hours, minutes)
+    event.begin = time-datetime.timedelta(hours = 5, minutes = 30)
+    event.location = location
+    event.description = description
+
+    cal.events.add(event)
+
+    return cal
+
 class Event:
-    def __init__(self, username: str, old_window: tk.Tk = None):
+    def __init__(self, username: str, old_window: tk.Tk = None, cal: ics.Calendar = ics.Calendar()):
+        self.cal_ics = cal
         if old_window:
             old_window.destroy()
         self.username = username
@@ -35,12 +51,16 @@ class Event:
             mini_frame.grid(row = 1, column = 0)
             join_btn = ttk.Button(mini_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = all_events[x][0]: self.join_btn(m))
             join_btn.grid(row = 0, column = 0, padx = 10)
-            details_btn = ttk.Button(mini_frame, text = "More Details", command = lambda m = all_events[x][0]: EventView(self.username, m, self.window))
+            details_btn = ttk.Button(mini_frame, text = "More Details", command = lambda m = all_events[x][0]: EventView(self.username, m, self.window, cal = self.cal_ics))
             details_btn.grid(row = 0, column = 1, padx = 10)
             all_posts.append(mega_frame)
         
+        self.length = len(all_events)
         create_event_btn = ttk.Button(self.main_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
-        create_event_btn.grid(row = len(all_events), column = 1, pady = (0, 10))
+        create_event_btn.grid(row = self.length, column = 1, pady = (0, 10))
+
+        download_ics_btn = ttk.Button(self.main_frame, text = "Download .ics File", command = self.download)
+        download_ics_btn.grid(row = self.length+1, column = 1, pady = (0, 10))
 
         self.window.update()
         if self.window.winfo_height() < 300:
@@ -52,15 +72,26 @@ class Event:
     
     def create_event(self):
         self.window.destroy()
-        EventCreate(self.username)
+        EventCreate(self.username, self.cal_ics)
     
+    def download(self):
+        if len(self.cal_ics.events) == 0:
+            error_lbl = ttk.Label(self.main_frame, text = "You do not have an .ics file to download!", foreground = "red")
+            error_lbl.grid(row = self.length+2, column = 1)
+        else:
+            with open('./oakridge-codefest/my_events.ics', 'w') as f: f.writelines(self.cal_ics.serialize_iter())
+            
+
     def join_btn(self, id):
         join_event(id, self.username)
         sub_window = tk.Toplevel()
         ttk.Label(sub_window, text = "You have successfully joined the event!", borderwidth = 1).pack(padx = 10, pady = 10)
+        event_data = get_event(id)
+        self.cal_ics = generate_ics(self.cal_ics, event_data[2], event_data[3], event_data[5], event_data[4], event_data[6])
 
 class EventView:
-    def __init__(self, username: str, id: int, old_window: tk.Tk):
+    def __init__(self, username: str, id: int, old_window: tk.Tk, cal: ics.Calendar = ics.Calendar()):
+        self.cal_ics = cal
         old_window.destroy()
         self.username = username
         self.window = tk.Tk()
@@ -68,51 +99,51 @@ class EventView:
         self.window.tk.call("source", "./oakridge-codefest/forest-dark.tcl")
         ttk.Style().theme_use("forest-dark")
 
-        event_data = get_event(id)
+        self.event_data = get_event(id)
 
         self.main_frame = ttk.Frame(self.window)
         self.main_frame.grid(row = 0, column = 1)
 
         title_name_lbl = ttk.Label(self.main_frame, text = "Title:")
         title_name_lbl.grid(row = 0, column = 0, pady = 10, padx = 10)
-        title_lbl = ttk.Label(self.main_frame, text = event_data[2])
+        title_lbl = ttk.Label(self.main_frame, text = self.event_data[2])
         title_lbl.grid(row = 0, column = 1, pady = 10, padx = 10)
 
         description_name_lbl = ttk.Label(self.main_frame, text = "Description:")
         description_name_lbl.grid(row = 1, column = 0, pady = (0, 10), padx = 10)
-        description_lbl = ttk.Label(self.main_frame, text = event_data[3])
+        description_lbl = ttk.Label(self.main_frame, text = self.event_data[3])
         description_lbl.grid(row = 1, column = 1, pady = (0, 10))
 
         date_name_lbl = ttk.Label(self.main_frame, text = "Date:")
         date_name_lbl.grid(row = 2, column = 0, pady = (0, 10), padx = 10)
-        date_lbl = ttk.Label(self.main_frame, text = event_data[4])
+        date_lbl = ttk.Label(self.main_frame, text = self.event_data[4])
         date_lbl.grid(row = 2, column = 1, pady = (0, 10))
 
         time_name_lbl = ttk.Label(self.main_frame, text = "Time:")
         time_name_lbl.grid(row = 3, column = 0, pady = (0, 10), padx = 10)
-        time_lbl = ttk.Label(self.main_frame, text = event_data[5])
+        time_lbl = ttk.Label(self.main_frame, text = self.event_data[5])
         time_lbl.grid(row = 3, column = 1, pady = (0, 10))
 
         location_name_lbl = ttk.Label(self.main_frame, text = "Location:")
         location_name_lbl.grid(row = 4, column = 0, pady = (0, 10), padx = 10)
-        location_lbl = ttk.Label(self.main_frame, text = event_data[6])
+        location_lbl = ttk.Label(self.main_frame, text = self.event_data[6])
         location_lbl.grid(row = 4, column = 1, pady = (0, 10))
 
         author_name_lbl = ttk.Label(self.main_frame, text = "Author:")
         author_name_lbl.grid(row = 5, column = 0, pady = (0, 10), padx = 10)
-        author_lbl = ttk.Label(self.main_frame, text = event_data[1])
+        author_lbl = ttk.Label(self.main_frame, text = self.event_data[1])
         author_lbl.grid(row = 5, column = 1)
 
         attendees_name_lbl = ttk.Label(self.main_frame, text = "Attendees:")
         attendees_name_lbl.grid(row = 6, column = 0, pady = (0, 10), padx = 10)
         try:
-            text = len(event_data[7].split(","))
+            text = len(self.event_data[7].split(","))
         except:
             text = 0
         attendees_lbl = ttk.Label(self.main_frame, text = text)
         attendees_lbl.grid(row = 6, column = 1)
 
-        back_btn = ttk.Button(self.main_frame, text = "Back", command = lambda m = self.username: Event(m, self.window))
+        back_btn = ttk.Button(self.main_frame, text = "Back", command = lambda m = self.username: Event(m, self.window, self.cal_ics))
         back_btn.grid(row = 7, column = 0, pady = (0, 10))
         join_btn = ttk.Button(self.main_frame, text = "Join Event", style = "Accent.TButton", command = lambda m = id: self.join_btn(m))
         join_btn.grid(row = 7, column = 1, pady = (0, 10))
@@ -125,10 +156,12 @@ class EventView:
         join_event(id, self.username)
         sub_window = tk.Toplevel()
         ttk.Label(sub_window, text = "You have successfully joined the event!", borderwidth = 1).pack(padx = 10, pady = 10)
+        self.cal_ics = generate_ics(self.cal_ics, self.event_data[2], self.event_data[3], self.event_data[5], self.event_data[4], self.event_data[6])
 
 
 class EventCreate:
-    def __init__(self, username: str):
+    def __init__(self, username: str, cal: ics.Calendar = ics.Calendar()):
+        self.cal_ics = cal
         self.username = username
         self.window = tk.Tk()
         self.window.title("Events")
@@ -193,7 +226,7 @@ class EventCreate:
         btns_frame.grid(row = 5, column = 1)
         self.create_btn = ttk.Button(btns_frame, text = "Create Event", style = "Accent.TButton", command = self.create_event)
         self.create_btn.grid(row = 0, column = 1, padx = 10, pady = (0, 10))
-        self.back_btn = ttk.Button(btns_frame, text = "Back", command = lambda m = self.username: Event(m, self.window))
+        self.back_btn = ttk.Button(btns_frame, text = "Back", command = lambda m = self.username: Event(m, self.window, self.cal_ics))
         self.back_btn.grid(row = 0, column = 0, padx = 10, pady = (0, 10))
 
         self.window.update()
@@ -326,4 +359,4 @@ class EventCreate:
         confirmation = ttk.Label(sub_window, text = "You have successfully created the event!", borderwidth = 1)
         confirmation.pack(padx = 10, pady = 10)
         sub_window.mainloop()
-        Event(self.username)
+        Event(self.username, cal = self.cal_ics)
