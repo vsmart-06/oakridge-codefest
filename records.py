@@ -87,7 +87,7 @@ def join_event(id, username):
         attendees += f",{username}"
     else:
         attendees = username
-    c.execute(f"UPDATE events SET attendees = '{attendees}'")
+    c.execute(f"UPDATE events SET attendees = '{attendees}' WHERE id = {id}")
     conn.commit()
     c.close()
     conn.close()
