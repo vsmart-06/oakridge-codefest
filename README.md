@@ -23,7 +23,7 @@ IDEAS:
 
 - [ ] PRIORITY 4: Think about new ideas regarding waste collection, etc.
 
-- [x] PRIORITY 5: Integrate recommendations for events to conduct using GPT-3.
+- [x] PRIORITY 5: Integrate recommendations for events to conduct using API of GPT-3.
 
 - Front-end: Python tkinter
 
